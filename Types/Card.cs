@@ -91,7 +91,7 @@ namespace UNO.Types
         /// </summary>
         public string GetImageUrl() => $"https://raw.githubusercontent.com/WilliamWelsh/UNO/main/images/{Color}{Number}{(Special == Special.None ? "" : Special)}.png";
 
-        public override string ToString() => $"{Color.ToString().Replace("None", "")} {Number}{(Special == Special.None ? "" : Special.ToString().Replace("Plus", "+").Replace("Four", "4").Replace("Wild+Two", "+2"))} {GetSpecialEmoji()}";
+        public override string ToString() => $"{Color.ToString().Replace("None", "").Replace("Red", "Đỏ").Replace("Yellow", "Vàng").Replace("Green", "Lục").Replace("Blue", "Dương")} {Number}{(Special == Special.None ? "" : Special.ToString().Replace("Plus", "+").Replace("Four", "4").Replace("Wild+Two", "+2"))} {GetSpecialEmoji()}";
 
         /// <summary>
         /// Convert the color to an emoji
