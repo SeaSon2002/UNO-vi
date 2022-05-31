@@ -110,7 +110,7 @@ namespace UNO.Types
                 Game.DoTurn(Game.CurrentCard, false).Wait();
 
                 // Update the ephemeral card menu
-                await UpdateCardMenu(command, $"Bạn bốc được {newCard}.");
+                await UpdateCardMenu(command, $"Bạn bốc được lá {newCard}.");
             }
         }
 

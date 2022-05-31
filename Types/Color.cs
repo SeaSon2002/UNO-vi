@@ -2,10 +2,10 @@ namespace UNO.Types
 {
     public enum Color
     {
-        Đỏ,
-        Lục,
-        Dương,
-        Vàng,
+        Red,
+        Green,
+        Blue,
+        Yellow,
         None
     }
 }
