@@ -80,13 +80,13 @@ namespace UNO.Types
             AddNewCard(newCard);
 
             // Update the game info
-            await Game.UpdateInfoMessage($"{User.Username} drew a card");
+            await Game.UpdateInfoMessage($"{User.Username} bốc một lá bài");
 
             // If they hit the max, kick them out
             if (Deck.Count >= 24)
             {
                 // Update the game info
-                await Game.UpdateInfoMessage($"{User.Username} hit the max cards (24) and was kicked");
+                await Game.UpdateInfoMessage($"{User.Username} đã đạt số bài tối đa (24) và bị xử thua");
 
                 // Kick them out
                 Game.Players.Remove(this);
@@ -96,7 +96,7 @@ namespace UNO.Types
                 {
                     m.Embed = new EmbedBuilder()
                         .WithColor(Colors.Red)
-                        .WithDescription($"You hit the max cards (24) and were kicked. Better luck next time. 😔")
+                        .WithDescription($"Bạn đã đạt số bài tối đa (24) và bị xử thua. Chúc bạn may mắn lần sau. 😔")
                         .Build();
 
                     m.Components = null;
@@ -110,7 +110,7 @@ namespace UNO.Types
                 Game.DoTurn(Game.CurrentCard, false).Wait();
 
                 // Update the ephemeral card menu
-                await UpdateCardMenu(command, $"You drew a {newCard}.");
+                await UpdateCardMenu(command, $"Bạn bốc được lá {newCard}.");
             }
         }
 
@@ -123,17 +123,17 @@ namespace UNO.Types
             for (int i = 0; i < count; i++)
                 AddNewCard();
 
-            var message = $"You drew {count} cards.";
+            var message = $"Bạn bốc thêm {count} lá.";
 
             // If they hit the max, kick them out
             if (Deck.Count >= 24)
             {
                 // Update the game info
-                await Game.UpdateInfoMessage($"{User.Username} hit the max cards (24) and was kicked 🤣");
+                await Game.UpdateInfoMessage($"{User.Username} đã đạt số bài tối đa (24) và bị xử thua");
 
                 // Update player info
                 Deck.Clear();
-                message = $"You hit the max cards (24) and were kicked. Better luck next time. 😔";
+                message = $"Bạn đã đạt số bài tối đa (24) và bị xử thua. Chúc bạn may mắn lần sau. 😔";
 
                 // Kick them out
                 Game.Players.Remove(this);
@@ -155,7 +155,7 @@ namespace UNO.Types
         public async Task ShowInitialCardMenu(SocketSlashCommand command)
         {
             await command.RespondAsync(component: new ComponentBuilder()
-                .WithButton("Click here to view your cards", "showcardmenu", style: ButtonStyle.Secondary)
+                .WithButton("Bấm để xem", "showcardmenu", style: ButtonStyle.Secondary)
                 .Build());
         }
 
@@ -185,7 +185,7 @@ namespace UNO.Types
             }
 
             // Add the draw card button
-            buttons.WithButton("Draw Card", "drawcard", style: ButtonStyle.Secondary, row: row, disabled: !isItMyTurn());
+            buttons.WithButton("Bốc bài", "drawcard", style: ButtonStyle.Secondary, row: row, disabled: !isItMyTurn());
 
             if (extraMessage != "")
                 extraMessage = $"\n\n**{extraMessage}**";
@@ -200,7 +200,7 @@ namespace UNO.Types
 
                         m.Embed = new EmbedBuilder()
                             .WithColor(isItMyTurn() ? Colors.Green : Colors.Red)
-                            .WithDescription($"You have {Deck.Count} cards.{extraMessage}{(isItMyTurn() ? "\n\nIt's your turn." : "")}")
+                            .WithDescription($"Bạn có {Deck.Count} lá bài.{extraMessage}{(isItMyTurn() ? "\n\nĐến lượt bạn!" : "")}")
                             .Build();
 
                         m.Components = buttons.Build();
@@ -218,7 +218,7 @@ namespace UNO.Types
 
                         m.Embed = new EmbedBuilder()
                             .WithColor(isItMyTurn() ? Colors.Green : Colors.Red)
-                            .WithDescription($"You have {Deck.Count} cards.{extraMessage}{(isItMyTurn() ? "\n\nIt's your turn." : "")}")
+                            .WithDescription($"Bạn có {Deck.Count} lá bài.{extraMessage}{(isItMyTurn() ? "\n\nĐến lượt bạn!" : "")}")
                             .Build();
 
                         m.Components = buttons.Build();
@@ -235,7 +235,7 @@ namespace UNO.Types
             if (isItMyTurn())
                 return true;
 
-            await UpdateCardMenu(command, "It's not your turn");
+            await UpdateCardMenu(command, "Hiện không phải lượt bạn");
             return false;
         }
 
@@ -275,7 +275,7 @@ namespace UNO.Types
 
             // Update the deck
             if (!Game.isGameOver)
-                await UpdateCardMenu(command, $"You played a {inputCard.ToString()}");
+                await UpdateCardMenu(command, $"Bạn đã dùng {inputCard.ToString()}");
         }
 
         /// <summary>
@@ -287,15 +287,15 @@ namespace UNO.Types
             {
                 m.Embed = new EmbedBuilder()
                     .WithColor(Colors.Green)
-                    .WithDescription("Select a color for this Wild card.")
+                    .WithDescription("Chọn màu cho Wild card này.")
                     .Build();
 
                 m.Components = new ComponentBuilder()
-                    .WithButton("Red", $"wild-Red-{special}-{index}", style: ButtonStyle.Secondary, new Emoji("🟥"))
-                    .WithButton("Green", $"wild-Green-{special}-{index}", style: ButtonStyle.Secondary, new Emoji("🟩"))
-                    .WithButton("Blue", $"wild-Blue-{special}-{index}", style: ButtonStyle.Secondary, new Emoji("🟦"))
-                    .WithButton("Yellow", $"wild-Yellow-{special}-{index}", style: ButtonStyle.Secondary, new Emoji("🟨"))
-                    .WithButton("Cancel", "cancelwild", style: ButtonStyle.Secondary)
+                    .WithButton("Đỏ", $"wild-Red-{special}-{index}", style: ButtonStyle.Secondary, new Emoji("🟥"))
+                    .WithButton("Lục", $"wild-Green-{special}-{index}", style: ButtonStyle.Secondary, new Emoji("🟩"))
+                    .WithButton("Dương", $"wild-Blue-{special}-{index}", style: ButtonStyle.Secondary, new Emoji("🟦"))
+                    .WithButton("Vàng", $"wild-Yellow-{special}-{index}", style: ButtonStyle.Secondary, new Emoji("🟨"))
+                    .WithButton("Quay lại", "cancelwild", style: ButtonStyle.Secondary)
                     .Build();
             });
         }

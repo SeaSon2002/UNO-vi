@@ -125,7 +125,7 @@ namespace UNO.Types
             var result = new StringBuilder();
 
             foreach (var player in Players)
-                result.AppendLine($"{(player == Host ? "👑" : "👤")} {player.User.Username} {(listCardCount ? ((player.Deck.Count == 1 ? "**UNO!**" : $"- {player.Deck.Count} cards")) : "")}");
+                result.AppendLine($"{(player == Host ? "👑" : "👤")} {player.User.Username} {(listCardCount ? ((player.Deck.Count == 1 ? "**UNO!**" : $"- có {player.Deck.Count} lá")) : "")}");
 
             if (highlightCurrent)
                 result.Replace(Players[CurrentPlayerIndex].User.Username, $"**{Players[CurrentPlayerIndex].User.Username}**");
@@ -148,9 +148,9 @@ namespace UNO.Types
                     m.Embed = new EmbedBuilder()
                         .WithColor(CurrentCard.GetDiscordColor())
                         .WithAuthor(new EmbedAuthorBuilder()
-                            .WithName($"{currentPlayer.User.Username}'s Turn - Round #{turnNumber}")
+                            .WithName($"Lượt của {currentPlayer.User.Username} - Lượt #{turnNumber}")
                             .WithIconUrl(currentPlayer.User.GetAvatarUrl() ?? currentPlayer.User.GetDefaultAvatarUrl()))
-                        .WithDescription($"Current card is a {CurrentCard.ToString()}.{stackText}{InfoMessage}")
+                        .WithDescription($"Lá bài trước đó: {CurrentCard.ToString()}.{stackText}{InfoMessage}")
                         .WithThumbnailUrl(CurrentCard.GetImageUrl())
                         .WithFields(new EmbedFieldBuilder[]
                         {
@@ -164,9 +164,9 @@ namespace UNO.Types
 
                     m.Components = new ComponentBuilder()
                         .WithButton("UNO!", $"sayuno", row: 0, style: ButtonStyle.Secondary, disabled: !Players.Any(p => p.CanSomeoneSayUno))
-                        .WithButton("View Cards", $"showcardprompt", row: 0, style: ButtonStyle.Secondary)
-                        .WithButton("Leave Game", $"leaveduringgame", row: 0, style: ButtonStyle.Secondary)
-                        .WithButton("End Game", $"endduringgame", row: 0, style: ButtonStyle.Secondary)
+                        .WithButton("Xem bộ bài của bạn", $"showcardprompt", row: 0, style: ButtonStyle.Secondary)
+                        .WithButton("Rời ván", $"leaveduringgame", row: 0, style: ButtonStyle.Secondary)
+                        .WithButton("Hủy ván", $"endduringgame", row: 0, style: ButtonStyle.Secondary)
                         .Build();
                 });
             }
@@ -189,9 +189,9 @@ namespace UNO.Types
                 m.Embed = new EmbedBuilder()
                     .WithColor(CurrentCard.GetDiscordColor())
                     .WithAuthor(new EmbedAuthorBuilder()
-                        .WithName($"{currentPlayer.User.Username}'s Turn")
+                        .WithName($"Lượt của {currentPlayer.User.Username}")
                         .WithIconUrl(currentPlayer.User.GetAvatarUrl() ?? currentPlayer.User.GetDefaultAvatarUrl()))
-                    .WithDescription($"It's {currentPlayer.User.Username}'s turn.\n\n**Press the `View Cards` button below to view your cards.**{InfoMessage}")
+                    .WithDescription($"Hiện là lượt của {currentPlayer.User.Username}.\n\n**Bấm nút `Xem bộ bài của bạn` để xem bộ bài bạn đang dùng.**{InfoMessage}")
                     .WithThumbnailUrl(CurrentCard.GetImageUrl())
                     .WithFields(new EmbedFieldBuilder[]
                     {
@@ -205,9 +205,9 @@ namespace UNO.Types
 
                 m.Components = new ComponentBuilder()
                     .WithButton("UNO!", $"sayuno", row: 0, style: ButtonStyle.Secondary, disabled: true)
-                    .WithButton("View Cards", $"showcardprompt", row: 0, style: ButtonStyle.Secondary)
-                    .WithButton("Leave Game", $"leaveduringgame", row: 0, style: ButtonStyle.Secondary)
-                    .WithButton("End Game", $"endduringgame", row: 0, style: ButtonStyle.Secondary)
+                    .WithButton("Xem bộ bài của bạn", $"showcardprompt", row: 0, style: ButtonStyle.Secondary)
+                    .WithButton("Rời ván", $"leaveduringgame", row: 0, style: ButtonStyle.Secondary)
+                    .WithButton("Hủy ván", $"endduringgame", row: 0, style: ButtonStyle.Secondary)
                     .Build();
             });
         }
@@ -280,9 +280,9 @@ namespace UNO.Types
                 m.Embed = new EmbedBuilder()
                     .WithColor(CurrentCard.GetDiscordColor())
                     .WithAuthor(new EmbedAuthorBuilder()
-                        .WithName($"{currentPlayer.User.Username}'s Turn - Round #{turnNumber}")
+                        .WithName($"Lượt của {currentPlayer.User.Username} - Lượt #{turnNumber}")
                         .WithIconUrl(currentPlayer.User.GetAvatarUrl() ?? currentPlayer.User.GetDefaultAvatarUrl()))
-                    .WithDescription(playedCard ? $"{previousPlayer.User.Username} played a {CurrentCard.ToString()}.{stackText}{InfoMessage}" : $"{currentPlayer.User.Username} drew a card.{stackText}{InfoMessage}")
+                    .WithDescription(playedCard ? $"{previousPlayer.User.Username} đã dùng {CurrentCard.ToString()}.{stackText}{InfoMessage}" : $"{currentPlayer.User.Username} đã bốc bài.{stackText}{InfoMessage}")
                     .WithThumbnailUrl(CurrentCard.GetImageUrl())
                     .WithFields(new EmbedFieldBuilder[]
                     {
@@ -296,9 +296,9 @@ namespace UNO.Types
 
                 m.Components = new ComponentBuilder()
                     .WithButton("UNO!", $"sayuno", row: 0, style: ButtonStyle.Secondary, disabled: !Players.Any(p => p.CanSomeoneSayUno))
-                    .WithButton("View Cards", $"showcardprompt", row: 0, style: ButtonStyle.Secondary)
-                    .WithButton("Leave Game", $"leaveduringgame", row: 0, style: ButtonStyle.Secondary)
-                    .WithButton("End Game", $"endduringgame", row: 0, style: ButtonStyle.Secondary)
+                    .WithButton("Xem bộ bài của bạn", $"showcardprompt", row: 0, style: ButtonStyle.Secondary)
+                    .WithButton("Rời ván", $"leaveduringgame", row: 0, style: ButtonStyle.Secondary)
+                    .WithButton("Hủy ván", $"endduringgame", row: 0, style: ButtonStyle.Secondary)
                     .Build();
             });
         }
@@ -316,13 +316,13 @@ namespace UNO.Types
             {
                 m.Embed = new EmbedBuilder()
                     .WithColor(Colors.Red)
-                    .WithDescription("You left the game")
+                    .WithDescription("Bạn đã rời ván chơi")
                     .Build();
 
                 m.Components = null;
             });
 
-            await UpdateInfoMessage($"{player.User.Username} left the game");
+            await UpdateInfoMessage($"{player.User.Username} vừa rời ván chơi");
             await CheckForWinner();
         }
 
@@ -350,14 +350,14 @@ namespace UNO.Types
             {
                 await GameMessage.ModifyAsync(m =>
                 {
-                    m.Content = "The game is over, I hope you had fun 😊";
+                    m.Content = "Ván chơi đã kết thúc.";
 
                     m.Embed = new EmbedBuilder()
                         .WithColor(CurrentCard.GetDiscordColor())
                         .WithAuthor(new EmbedAuthorBuilder()
                             .WithName(winner.User.Username)
                             .WithIconUrl(winner.User.GetAvatarUrl() ?? winner.User.GetDefaultAvatarUrl()))
-                        .WithDescription($"{winner.User.Username} has won after {turnNumber} rounds!{InfoMessage}")
+                        .WithDescription($"{winner.User.Username} đã thắng sau {turnNumber} lượt!{InfoMessage}")
                         .WithThumbnailUrl(CurrentCard.GetImageUrl())
                         .Build();
 
@@ -365,7 +365,7 @@ namespace UNO.Types
                 });
 
                 foreach (var player in Players)
-                    await player.RemoveAllPlayerCardMenusWithMessage("The game is over, I hope you had fun 😊");
+                    await player.RemoveAllPlayerCardMenusWithMessage("Ván chơi đã kết thúc.");
             }
         }
 

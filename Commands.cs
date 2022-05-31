@@ -9,7 +9,7 @@ namespace UNO
         public GameManager GameManager { get; set; }
 
         // /uno
-        [SlashCommand("uno", "Host a new game")]
+        [SlashCommand("uno", "Bắt đầu ván mới")]
         public async Task UnoCommand() => await GameManager.TryToInitializeGame(Context.Interaction);
 
         // "View Cards" button
@@ -20,7 +20,7 @@ namespace UNO
         [ComponentInteraction("showcardprompt")]
         public async Task ShowCardPromptCommand() => await Context.Interaction.RespondAsync("Please click the button below 😀",
             components: new ComponentBuilder()
-            .WithButton("Click here to view your cards", "showcardmenu", style: ButtonStyle.Secondary)
+            .WithButton("Xem bộ bài của bạn", "showcardmenu", style: ButtonStyle.Secondary)
             .Build(), ephemeral: true);
 
         // "Draw Card" button
@@ -67,13 +67,13 @@ namespace UNO
         [ComponentInteraction("sayuno")]
         public async Task TryToSayUno() => await GameManager.TryToSayUno((SocketMessageComponent)Context.Interaction);
 
-        [Group("admin", "UNO admin commands")]
+        [Group("admin", "Lệnh của Admin")]
         public class AdminCommands : InteractionModuleBase<ShardedInteractionContext>
         {
             public GameManager GameManager { get; set; }
 
             // /admin reset
-            [SlashCommand("reset", "Reset/delete the game in this channel")]
+            [SlashCommand("reset", "Reset/dừng ván chơi trong channel")]
             public async Task TryToResetGame() => await GameManager.TryToResetGame((SocketSlashCommand)Context.Interaction);
         }
     }

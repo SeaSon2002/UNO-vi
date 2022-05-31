@@ -21,18 +21,18 @@ namespace UNO
         {
             // Check if there's a game in this channel
             if (!activeGames.Any(g => g.ChannelId == command.Channel.Id))
-                return await command.FailToFindAGameWithPlayer("There is no game is this channel.");
+                return await command.FailToFindAGameWithPlayer("Channel này hiện không có ván chơi nào.");
 
             // Get the game object
             var retrievedGame = new RetrievedGame(activeGames.Where(g => g.ChannelId == command.Channel.Id).First());
 
             // Check if the commanding user is in this game
             if (!retrievedGame.Game.Players.Any(p => p.User.Id == command.User.Id))
-                return await command.FailToFindAGameWithPlayer("You are not in the game that is currently going on in this channel.");
+                return await command.FailToFindAGameWithPlayer("Bạn hiện không tham gia ván chơi trong channel này.");
 
             // Check if the game has started yet
             else if (!retrievedGame.Game.hasStarted)
-                return await command.FailToFindAGameWithPlayer("The game has not started yet.");
+                return await command.FailToFindAGameWithPlayer("Ván chơi chưa bắt đầu.");
 
             // The player is in this game and it's started
             // We're good to go

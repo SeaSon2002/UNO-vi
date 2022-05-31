@@ -34,7 +34,7 @@ namespace UNO
                     return true;
                 }
 
-                await command.PrintError($"There is already an active game in this channel, please wait until that one is finished, or ask the Host, {game.Host.User.Mention}, to end it. If there is an issue, an admin can use `/admin` commands to reset or respawn the game.");
+                await command.PrintError($"Channel này đang có một ván chơi, hãy chờ đến khi nó kết thúc hoặc khi {game.Host.User.Mention} hủy ván hiện tại.");
                 return false;
             }
 
@@ -57,7 +57,7 @@ namespace UNO
                     return true;
                 }
 
-                await command.PrintError("You are already hosting a game. Either finish that game, or close it.\n\nYou can end a game by pressing the \"End Game\" button. If there is an issue, an admin can use `/admin` commands to reset or respawn the game.");
+                await command.PrintError("Bạn đang là chủ ván chơi. Hãy hoàn thành hoặc hủy ván trước.\n\nBấm nút \"Hủy ván\" để hủy ván của bạn.");
                 return false;
             }
 
@@ -80,7 +80,7 @@ namespace UNO
                     return true;
                 }
 
-                await command.PrintError("You are already playing a game. Either finish that game, or leave it.\n\nYou can leave a game by pressing the \"Leave Game\" button on. If there is an issue, an admin can use `/admin` commands to reset or respawn the game.");
+                await command.PrintError("Bạn đang chơi dở ván khác. Hãy hoàn thành hoặc rời ván đó.\n\nBấm nút \"Rời ván\" để rời ván đang tham gia.");
                 return false;
             }
 
@@ -98,17 +98,17 @@ namespace UNO
 
             var game = new Types.Game(command.User, command.Channel.Id);
 
-            await command.RespondAsync("Started a new game", embed: new EmbedBuilder()
+            await command.RespondAsync("Đã mở ván chơi mới", embed: new EmbedBuilder()
                     .WithColor(Colors.Red)
                     .WithAuthor(new EmbedAuthorBuilder()
                         .WithName("UNO"))
-                    .WithDescription($"{game.Host.User.Username} has started a game of UNO! Click the button below to join!\n\n{game.ListPlayers(listCardCount: false)}")
+                    .WithDescription($"{game.Host.User.Username} đã mở ván UNO mới! Bấm nút để tham gia!\n\n{game.ListPlayers(listCardCount: false)}")
                     .Build(),
                 components: new ComponentBuilder()
-                    .WithButton("Start Game", $"start-{command.User.Id}", row: 0, style: ButtonStyle.Secondary, disabled: true)
-                    .WithButton("Cancel Game", $"cancel-{command.User.Id}", row: 0, style: ButtonStyle.Secondary)
-                    .WithButton("Join Game", $"join-{command.User.Id}", row: 1, style: ButtonStyle.Secondary)
-                    .WithButton("Leave Game", $"leave-{command.User.Id}", row: 1, style: ButtonStyle.Secondary)
+                    .WithButton("Bắt đầu", $"start-{command.User.Id}", row: 0, style: ButtonStyle.Secondary, disabled: true)
+                    .WithButton("Hủy ván", $"cancel-{command.User.Id}", row: 0, style: ButtonStyle.Secondary)
+                    .WithButton("Tham gia", $"join-{command.User.Id}", row: 1, style: ButtonStyle.Secondary)
+                    .WithButton("Rời ván", $"leave-{command.User.Id}", row: 1, style: ButtonStyle.Secondary)
                     .Build());
 
             ActiveGames.Add(game);
@@ -122,7 +122,7 @@ namespace UNO
             // Check if that game is still valid
             if (!ActiveGames.Any(g => g.Host.User.Id == hostId))
             {
-                await command.PrintError("This game does not exist. If there is an issue, an admin can use `/admin` commands to reset or respawn the game.");
+                await command.PrintError("Ván này không tồn tại hoặc đã kết thúc.");
                 return;
             }
 
@@ -132,28 +132,28 @@ namespace UNO
             // Check if this game has started already
             if (game.hasStarted)
             {
-                await command.PrintError("This game started already. If there is an issue, an admin can use `/admin` commands to reset or respawn the game.");
+                await command.PrintError("Ván này đã bắt đầu");
                 return;
             }
 
             // Check if the user is already in the game
             else if (game.Players.Any(p => p.User.Id == command.User.Id))
             {
-                await command.PrintError("You are already in this game. Click the \'Leave Game\" button if you want to leave it. If there is an issue, an admin can use `/admin` commands to reset or respawn the game.");
+                await command.PrintError("Bạn đã đang tham gia ván này. Bấm nút \'Rời ván\" nếu không muốn chơi nữa.");
                 return;
             }
 
             // Check if the user trying to join is the host
             else if (game.Host.User.Id == command.User.Id)
             {
-                await command.PrintError("You cannot join your own game. 😂");
+                await command.PrintError("Nút này chỉ dành cho những người muốn tham gia vào ván chơi của bạn.");
                 return;
             }
 
             // Check if the game already has 4 players
             else if (game.Players.Count >= game.MaxPlayers)
             {
-                await command.PrintError("This game is full.");
+                await command.PrintError("Số người đã đạt tối đa.");
                 return;
             }
 
@@ -166,14 +166,14 @@ namespace UNO
                     .WithColor(Colors.Red)
                     .WithAuthor(new EmbedAuthorBuilder()
                         .WithName("UNO"))
-                    .WithDescription($"{game.Host.User.Username} has started a game of UNO! Click the button below to join!\n\n{game.ListPlayers(listCardCount: false)}\n\n*{command.User.Username} just joined*")
+                    .WithDescription($"{game.Host.User.Username} đã mở ván UNO mới! Bấm nút để tham gia!\n\n{game.ListPlayers(listCardCount: false)}\n\n*{command.User.Username} vừa tham gia ván chơi*")
                     .Build();
 
                 m.Components = new ComponentBuilder()
-                    .WithButton("Start Game", $"start-{game.Host.User.Id}", row: 0, style: ButtonStyle.Secondary, disabled: game.Players.Count == 0)
-                    .WithButton("Cancel Game", $"cancel-{game.Host.User.Id}", row: 0, style: ButtonStyle.Secondary)
-                    .WithButton("Join Game", $"join-{game.Host.User.Id}", row: 1, style: ButtonStyle.Secondary, disabled: game.Players.Count >= game.MaxPlayers)
-                    .WithButton("Leave Game", $"leave-{game.Host.User.Id}", row: 1, style: ButtonStyle.Secondary)
+                    .WithButton("Bắt đầu", $"start-{game.Host.User.Id}", row: 0, style: ButtonStyle.Secondary, disabled: game.Players.Count == 0)
+                    .WithButton("Hủy ván", $"cancel-{game.Host.User.Id}", row: 0, style: ButtonStyle.Secondary)
+                    .WithButton("Tham gia", $"join-{game.Host.User.Id}", row: 1, style: ButtonStyle.Secondary, disabled: game.Players.Count >= game.MaxPlayers)
+                    .WithButton("Rời ván", $"leave-{game.Host.User.Id}", row: 1, style: ButtonStyle.Secondary)
                     .Build();
             });
 
@@ -188,7 +188,7 @@ namespace UNO
             // Check if that game is still valid
             if (!ActiveGames.Any(g => g.Host.User.Id == hostId))
             {
-                await command.PrintError("This game does not exist. If there is an issue, an admin can use `/admin` commands to reset or respawn the game.");
+                await command.PrintError("Ván này không tồn tại hoặc đã kết thúc.");
                 return;
             }
 
@@ -198,14 +198,14 @@ namespace UNO
             // Check if the user is the host
             if (game.Host.User.Id == command.User.Id)
             {
-                await command.PrintError("You're the host. If you want to leave, use the \"Cancel Game\" button. If there is an issue, an admin can use `/admin` commands to reset or respawn the game.");
+                await command.PrintError("Bạn là chủ ván. Nếu muốn hủy ván hãy bấm \"Hủy ván\".");
                 return;
             }
 
             // Check if the user is actually in the game
             else if (!game.Players.Any(p => p.User.Id == command.User.Id))
             {
-                await command.PrintError("You're not in this game. 😂");
+                await command.PrintError("Bạn không tham gia ván này.");
                 return;
             }
 
@@ -219,14 +219,14 @@ namespace UNO
                     .WithColor(Colors.Red)
                     .WithAuthor(new EmbedAuthorBuilder()
                         .WithName("UNO"))
-                    .WithDescription($"{game.Host.User.Username} has started a game of UNO! Click the button below to join!\n\n{game.ListPlayers(listCardCount: false)}\n\n*{command.User.Username} just left*")
+                    .WithDescription($"{game.Host.User.Username} đã mở ván UNO mới! Bấm nút để tham gia!\n\n{game.ListPlayers(listCardCount: false)}\n\n*{command.User.Username} vừa rời ván chơi*")
                     .Build();
 
                 m.Components = new ComponentBuilder()
-                    .WithButton("Start Game", $"start-{game.Host.User.Id}", row: 0, style: ButtonStyle.Secondary, disabled: game.Players.Count == 0)
-                    .WithButton("Cancel Game", $"cancel-{game.Host.User.Id}", row: 0, style: ButtonStyle.Secondary)
-                    .WithButton("Join Game", $"join-{game.Host.User.Id}", row: 1, style: ButtonStyle.Secondary, disabled: game.Players.Count >= game.MaxPlayers)
-                    .WithButton("Leave Game", $"leave-{game.Host.User.Id}", row: 1, style: ButtonStyle.Secondary)
+                    .WithButton("Bắt đầu", $"start-{game.Host.User.Id}", row: 0, style: ButtonStyle.Secondary, disabled: game.Players.Count == 0)
+                    .WithButton("Hủy ván", $"cancel-{game.Host.User.Id}", row: 0, style: ButtonStyle.Secondary)
+                    .WithButton("Tham gia", $"join-{game.Host.User.Id}", row: 1, style: ButtonStyle.Secondary, disabled: game.Players.Count >= game.MaxPlayers)
+                    .WithButton("Rời ván", $"leave-{game.Host.User.Id}", row: 1, style: ButtonStyle.Secondary)
                     .Build();
             });
 
@@ -243,7 +243,7 @@ namespace UNO
             // Check if that game is still valid
             if (!ActiveGames.Any(g => g.Host.User.Id == hostId))
             {
-                await command.PrintError("This game does not exist. If there is an issue, an admin can use `/admin` commands to reset or respawn the game.");
+                await command.PrintError("Ván này không tồn tại hoặc đã kết thúc.");
                 canCancel = false;
             }
 
@@ -252,7 +252,7 @@ namespace UNO
 
             if (game.Host.User.Id != command.User.Id)
             {
-                await command.PrintError("You're not the host. If you want to leave, use the \"Leave Game\" button. If there is an issue, an admin can use `/admin` commands to reset or respawn the game.");
+                await command.PrintError("Bạn không phải chủ ván. Nếu muốn rời ván hãy bấm \"Rời ván\".");
                 canCancel = false;
             }
 
@@ -266,7 +266,7 @@ namespace UNO
                     .WithColor(Colors.Red)
                     .WithAuthor(new EmbedAuthorBuilder()
                         .WithName("UNO"))
-                    .WithDescription($"{game.Host.User.Username} has cancelled the game.\n\nIf you want to start a new game in this channel, do `/uno`")
+                    .WithDescription($"{game.Host.User.Username} đã hủy ván chơi.\n\nDùng lệnh `/uno` để tạo ván mới trong channel này.")
                     .Build();
 
                 m.Components = null;
@@ -284,7 +284,7 @@ namespace UNO
             // Check if that game is still valid
             if (!ActiveGames.Any(g => g.Host.User.Id == hostId))
             {
-                await command.PrintError("This game does not exist.");
+                await command.PrintError("Ván này không tồn tại hoặc đã kết thúc.");
                 return;
             }
 
@@ -293,7 +293,7 @@ namespace UNO
 
             if (game.Host.User.Id != command.User.Id)
             {
-                await command.PrintError("Only the host can start the game");
+                await command.PrintError("Chỉ chủ ván mới có thể bắt đầu.");
                 return;
             }
 
@@ -324,7 +324,7 @@ namespace UNO
             // Check if this card be played
             if (!retrievedGame.Player.CheckIfCardCanBePlayed(inputCard))
             {
-                await retrievedGame.Player.UpdateCardMenu(command, "That card cannot be played. Please select a different card");
+                await retrievedGame.Player.UpdateCardMenu(command, "Không thể dùng lá bài đó, hãy dùng lá khác.");
                 return;
             }
 
@@ -381,7 +381,7 @@ namespace UNO
             // Check if this card be played
             if (!retrievedGame.Player.CheckIfCardCanBePlayed(inputCard))
             {
-                await retrievedGame.Player.UpdateCardMenu(command, "That card cannot be played. Please select a different card");
+                await retrievedGame.Player.UpdateCardMenu(command, "Không thể dùng lá bài đó, hãy dùng lá khác.");
                 return;
             }
 
@@ -440,7 +440,7 @@ namespace UNO
             // Check if they're host
             if (retrievedGame.Game.Host.User.Id != retrievedGame.Player.User.Id)
             {
-                await command.PrintError($"Only the host ({retrievedGame.Game.Host.User.Username}) can end the game.");
+                await command.PrintError($"Chỉ chủ ván ({retrievedGame.Game.Host.User.Username}) mới có thể hủy ván chơi.");
                 return;
             }
 
@@ -451,7 +451,7 @@ namespace UNO
                     .WithColor(Colors.Red)
                     .WithAuthor(new EmbedAuthorBuilder()
                         .WithName($"UNO"))
-                    .WithDescription($"{retrievedGame.Game.Host.User.Username} has ended the game.\n\nIf you want to start a new game in this channel, do `/uno`")
+                    .WithDescription($"{retrievedGame.Game.Host.User.Username} đã hủy ván chơi.\n\nDùng lệnh `/uno` để tạo ván mới trong channel này.")
                     .Build();
 
                 m.Components = null;
@@ -483,14 +483,14 @@ namespace UNO
             // Has to be an admin
             if (!((SocketGuildUser)command.User).GuildPermissions.Administrator)
             {
-                await command.PrintError("You must have the Administrator permission to use this command.");
+                await command.PrintError("Chỉ Admin mới có thể dùng lệnh này.");
                 return;
             }
 
             // Try to find a valid game in this channel
             if (!ActiveGames.Any(g => g.ChannelId == command.Channel.Id))
             {
-                await command.PrintError("There is no game in this channel.");
+                await command.PrintError("Channel này hiện không có ván chơi nào.");
                 return;
             }
 
@@ -503,7 +503,7 @@ namespace UNO
                     .WithColor(Colors.Red)
                     .WithAuthor(new EmbedAuthorBuilder()
                         .WithName($"UNO"))
-                    .WithDescription($"Game was manually reset by {command.User.Username}.")
+                    .WithDescription($"{command.User.Username} đã reset ván chơi này.")
                     .Build();
 
                 m.Components = null;
@@ -512,14 +512,14 @@ namespace UNO
             // Delete the game
             ActiveGames.Remove(game);
             foreach (var player in game.Players)
-                await player.RemoveAllPlayerCardMenusWithMessage($"{command.User.Username} has manually reset the game in this channel.\n\nIf you want to start a new game in this channel, do `/uno`");
+                await player.RemoveAllPlayerCardMenusWithMessage($"{command.User.Username} đã buộc dừng ván chơi.\n\nDùng lệnh `/uno` để tạo ván mới trong channel này.");
 
             // Respond to the interaction
             await command.RespondAsync(embed: new EmbedBuilder()
                 .WithColor(Colors.Red)
                 .WithAuthor(new EmbedAuthorBuilder()
                     .WithName($"UNO"))
-                .WithDescription($"{command.User.Username} has manually reset the game in this channel.\n\nIf you want to start a new game in this channel, do `/uno`")
+                .WithDescription($"{command.User.Username} đã buộc dừng ván chơi.\n\nDùng lệnh `/uno` để tạo ván mới trong channel này.")
                 .Build());
 
             ActiveGames.Remove(game);
@@ -539,7 +539,7 @@ namespace UNO
             // See if anyone has two cards
             if (!retrievedGame.Game.Players.Any(p => p.CanSomeoneSayUno))
             {
-                await command.PrintError("You were too late! 🐢🐢");
+                await command.PrintError("Bạn chậm quá! Đã có người `UNO!` trước bạn 🐢🐢");
                 return;
             }
 
@@ -550,17 +550,17 @@ namespace UNO
             if (playerWithOneCard.User.Id == command.User.Id)
             {
                 playerWithOneCard.CanSomeoneSayUno = false;
-                await retrievedGame.Game.UpdateInfoMessage($"{command.User.Username} said UNO before anyone else did and didn't have to pick up any cards.", true);
-                await command.PrintSuccess("You said UNO before anyone else did, so you don't have to pick up any cards 😎. Congrats ⚡");
+                await retrievedGame.Game.UpdateInfoMessage($"{command.User.Username} đã `UNO!` đầu tiên nên không bị bốc thêm bài.", true);
+                await command.PrintSuccess("Chúc mừng, bạn là người đầu tiên `UNO!` nên bạn không bị bốc thêm bài.");
                 return;
             }
 
             // Uh oh... someone has to pick up 2 cards.. 🤡🤡
             await playerWithOneCard.DrawCards(2);
 
-            await retrievedGame.Game.UpdateInfoMessage($"{command.User.Username} said UNO before {playerWithOneCard.User.Username} did so they had to pick up 2 cards 😂", true);
+            await retrievedGame.Game.UpdateInfoMessage($"{command.User.Username} đã `UNO!` trước, {playerWithOneCard.User.Username} buộc phải bốc thêm 2 lá bài.", true);
 
-            await command.PrintSuccess($"You said UNO so {playerWithOneCard.User.Username} had to pick up 2 cards. Congrats ⚡");
+            await command.PrintSuccess($"Bạn đã `UNO!` trước, {playerWithOneCard.User.Username} phải bốc thêm 2 lá bài.");
         }
     }
 }

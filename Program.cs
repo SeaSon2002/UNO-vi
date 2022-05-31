@@ -59,7 +59,8 @@ namespace UNO
             var totalGuilds = _client.Shards.Sum(x => x.Guilds.Count);
 
             // Update Bot Status
-            await _client.SetGameAsync($"/uno on {totalGuilds} servers");
+            //await _client.SetGameAsync($"/uno on {totalGuilds} servers");
+            await _client.SetStatusAsync(UserStatus.Invisible);
 
             // Update Top.gg Server Count
             if (Config.USE_TOP_GG_API && !Config.IS_DEBUG)
@@ -74,7 +75,7 @@ namespace UNO
         {
             // Uncomment this to register commands (should only be run once, not everytime it starts)
             // Comment it out again after registering the commands
-            //await _commands.RegisterCommandsGloballyAsync();
+            await _commands.RegisterCommandsGloballyAsync();
 
             if (Config.IS_DEBUG)
             {
