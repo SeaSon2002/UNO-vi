@@ -12,7 +12,7 @@ namespace UNO
         => await interaction.RespondAsync(ephemeral: true, embed: new EmbedBuilder()
                 .WithColor(Colors.Green)
                 .WithAuthor(new EmbedAuthorBuilder()
-                    .WithName("Success"))
+                    .WithName("✔"))
                 .WithDescription(message)
                 .Build());
 
@@ -23,7 +23,7 @@ namespace UNO
         => await interaction.RespondAsync(ephemeral: true, embed: new EmbedBuilder()
                 .WithColor(Colors.Red)
                 .WithAuthor(new EmbedAuthorBuilder()
-                    .WithName("Error"))
+                    .WithName("⚠"))
                 .WithDescription(message)
                 .Build());
 

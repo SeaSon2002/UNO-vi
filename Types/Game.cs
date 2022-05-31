@@ -125,7 +125,7 @@ namespace UNO.Types
             var result = new StringBuilder();
 
             foreach (var player in Players)
-                result.AppendLine($"{(player == Host ? "👑" : "👤")} {player.User.Username} {(listCardCount ? ((player.Deck.Count == 1 ? "**UNO!**" : $"- có {player.Deck.Count} lá")) : "")}");
+                result.AppendLine($"{(player == Host ? "👑" : "👤")} {player.User.Username} {(listCardCount ? ((player.Deck.Count == 1 ? "**UNO!**" : $"- {player.Deck.Count} lá")) : "")}");
 
             if (highlightCurrent)
                 result.Replace(Players[CurrentPlayerIndex].User.Username, $"**{Players[CurrentPlayerIndex].User.Username}**");
@@ -156,7 +156,7 @@ namespace UNO.Types
                         {
                             new EmbedFieldBuilder()
                             {
-                                Name = $"Players {(isReversed ? "🔃" : "")}",
+                                Name = $"Người chơi {(isReversed ? "🔃" : "")}",
                                 Value = ListPlayers(true),
                             }
                         })
@@ -197,7 +197,7 @@ namespace UNO.Types
                     {
                         new EmbedFieldBuilder()
                         {
-                            Name = "Players",
+                            Name = "Người chơi",
                             Value = ListPlayers(true),
                         }
                     })
@@ -263,7 +263,7 @@ namespace UNO.Types
             // Check if this player has to pick up cards
             if (StackToPickUp > 0 && (lastCard.Special == Special.WildPlusTwo || lastCard.Special == Special.WildPlusFour) && CurrentCard.Special != Special.WildPlusTwo && CurrentCard.Special != Special.WildPlusFour || !playedCard)
             {
-                await UpdateInfoMessage($"{previousPlayer.User.Username} had to pick up {StackToPickUp} cards 😂🤡");
+                await UpdateInfoMessage($"{previousPlayer.User.Username} phải bốc thêm {StackToPickUp} lá bài 😂🤡");
                 await previousPlayer.DrawCards(StackToPickUp);
                 StackToPickUp = 0;
             }
@@ -282,13 +282,13 @@ namespace UNO.Types
                     .WithAuthor(new EmbedAuthorBuilder()
                         .WithName($"Lượt của {currentPlayer.User.Username} - Lượt #{turnNumber}")
                         .WithIconUrl(currentPlayer.User.GetAvatarUrl() ?? currentPlayer.User.GetDefaultAvatarUrl()))
-                    .WithDescription(playedCard ? $"{previousPlayer.User.Username} đã dùng {CurrentCard.ToString()}.{stackText}{InfoMessage}" : $"{currentPlayer.User.Username} đã bốc bài.{stackText}{InfoMessage}")
+                    .WithDescription(playedCard ? $"{previousPlayer.User.Username} đã dùng {CurrentCard.ToString()}.{stackText}{InfoMessage}" : $"{previousPlayer.User.Username} đã bốc bài.{stackText}{InfoMessage}")
                     .WithThumbnailUrl(CurrentCard.GetImageUrl())
                     .WithFields(new EmbedFieldBuilder[]
                     {
                         new EmbedFieldBuilder()
                         {
-                            Name = $"Players {(isReversed ? "🔃" : "")}",
+                            Name = $"Người chơi {(isReversed ? "🔃" : "")}",
                             Value = ListPlayers(true),
                         }
                     })

@@ -18,9 +18,9 @@ namespace UNO
 
         // "Click here to view your cards" button
         [ComponentInteraction("showcardprompt")]
-        public async Task ShowCardPromptCommand() => await Context.Interaction.RespondAsync("Please click the button below 😀",
+        public async Task ShowCardPromptCommand() => await Context.Interaction.RespondAsync(" ",
             components: new ComponentBuilder()
-            .WithButton("Xem bộ bài của bạn", "showcardmenu", style: ButtonStyle.Secondary)
+            .WithButton("Bấm để xem", "showcardmenu", style: ButtonStyle.Secondary)
             .Build(), ephemeral: true);
 
         // "Draw Card" button

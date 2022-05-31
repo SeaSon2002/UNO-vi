@@ -102,7 +102,7 @@ namespace UNO
                     .WithColor(Colors.Red)
                     .WithAuthor(new EmbedAuthorBuilder()
                         .WithName("UNO"))
-                    .WithDescription($"{game.Host.User.Username} đã mở ván UNO mới! Bấm nút để tham gia!\n\n{game.ListPlayers(listCardCount: false)}")
+                    .WithDescription($"{game.Host.User.Username} đã mở ván UNO mới!\n\n{game.ListPlayers(listCardCount: false)}")
                     .Build(),
                 components: new ComponentBuilder()
                     .WithButton("Bắt đầu", $"start-{command.User.Id}", row: 0, style: ButtonStyle.Secondary, disabled: true)
@@ -150,7 +150,7 @@ namespace UNO
                 return;
             }
 
-            // Check if the game already has 4 players
+            // Check if the game already has 12 players
             else if (game.Players.Count >= game.MaxPlayers)
             {
                 await command.PrintError("Số người đã đạt tối đa.");
@@ -166,7 +166,7 @@ namespace UNO
                     .WithColor(Colors.Red)
                     .WithAuthor(new EmbedAuthorBuilder()
                         .WithName("UNO"))
-                    .WithDescription($"{game.Host.User.Username} đã mở ván UNO mới! Bấm nút để tham gia!\n\n{game.ListPlayers(listCardCount: false)}\n\n*{command.User.Username} vừa tham gia ván chơi*")
+                    .WithDescription($"{game.Host.User.Username} đã mở ván UNO mới!\n\n{game.ListPlayers(listCardCount: false)}\n\n*{command.User.Username} vừa tham gia*")
                     .Build();
 
                 m.Components = new ComponentBuilder()
@@ -219,7 +219,7 @@ namespace UNO
                     .WithColor(Colors.Red)
                     .WithAuthor(new EmbedAuthorBuilder()
                         .WithName("UNO"))
-                    .WithDescription($"{game.Host.User.Username} đã mở ván UNO mới! Bấm nút để tham gia!\n\n{game.ListPlayers(listCardCount: false)}\n\n*{command.User.Username} vừa rời ván chơi*")
+                    .WithDescription($"{game.Host.User.Username} đã mở ván UNO mới!\n\n{game.ListPlayers(listCardCount: false)}\n\n*{command.User.Username} vừa rời*")
                     .Build();
 
                 m.Components = new ComponentBuilder()
@@ -324,7 +324,7 @@ namespace UNO
             // Check if this card be played
             if (!retrievedGame.Player.CheckIfCardCanBePlayed(inputCard))
             {
-                await retrievedGame.Player.UpdateCardMenu(command, "Không thể dùng lá bài đó, hãy dùng lá khác.");
+                await retrievedGame.Player.UpdateCardMenu(command, "Không thể dùng lá bài đó.");
                 return;
             }
 
@@ -381,7 +381,7 @@ namespace UNO
             // Check if this card be played
             if (!retrievedGame.Player.CheckIfCardCanBePlayed(inputCard))
             {
-                await retrievedGame.Player.UpdateCardMenu(command, "Không thể dùng lá bài đó, hãy dùng lá khác.");
+                await retrievedGame.Player.UpdateCardMenu(command, "Không thể dùng lá bài đó.");
                 return;
             }
 
@@ -440,7 +440,7 @@ namespace UNO
             // Check if they're host
             if (retrievedGame.Game.Host.User.Id != retrievedGame.Player.User.Id)
             {
-                await command.PrintError($"Chỉ chủ ván ({retrievedGame.Game.Host.User.Username}) mới có thể hủy ván chơi.");
+                await command.PrintError($"Chỉ ({retrievedGame.Game.Host.User.Username}) mới có thể hủy ván chơi.");
                 return;
             }
 

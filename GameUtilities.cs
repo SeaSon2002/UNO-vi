@@ -28,7 +28,7 @@ namespace UNO
 
             // Check if the commanding user is in this game
             if (!retrievedGame.Game.Players.Any(p => p.User.Id == command.User.Id))
-                return await command.FailToFindAGameWithPlayer("Bạn hiện không tham gia ván chơi trong channel này.");
+                return await command.FailToFindAGameWithPlayer("Bạn hiện không tham gia vào ván chơi trong channel này.");
 
             // Check if the game has started yet
             else if (!retrievedGame.Game.hasStarted)
